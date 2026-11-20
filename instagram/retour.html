@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Fizzville — retour Instagram</title>
+<style>body{margin:0;background:#170f2b;color:#f3eefc;font:16px/1.6 system-ui,sans-serif;text-align:center;padding:15vh 16px}a{color:#2fe3ff}</style>
+</head>
+<body>
+<p id="m">Retour vers le tableau de bord Fizzville…</p>
+<script>
+// Page relais : Instagram exige une adresse de retour publique en HTTPS. Elle renvoie immédiatement le code
+// vers le récepteur local du PC (127.0.0.1), dont le port est porté par « state » (« port.aléa »).
+// Le code seul est inutilisable sans le secret de l'application, qui ne quitte jamais le PC.
+(function () {
+  var q = new URLSearchParams(location.search);
+  var state = q.get("state") || "";
+  var port = state.split(".")[0];
+  if (!/^\d{2,5}$/.test(port)) {
+    document.getElementById("m").textContent = "Lien incomplet : relancez la connexion depuis le tableau de bord.";
+    return;
+  }
+  var p = new URLSearchParams();
+  ["code", "state", "error", "error_reason", "error_description"].forEach(function (k) {
+    if (q.get(k)) p.set(k, q.get(k).replace(/#_$/, ""));
+  });
+  location.replace("http://127.0.0.1:" + port + "/callback/?" + p.toString());
+})();
+</script>
+</body>
+</html>
